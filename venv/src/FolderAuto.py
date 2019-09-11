@@ -130,12 +130,14 @@ path=os.chdir("C:\\Temp\\SOA\\")
 list=os.listdir(path)
 #print(list)
 newlist=[]
+noSOAList=[]
 for dir_list in list:
     #print(dir_list)
     try:
         newdir = os.chdir("C:\\Temp\\SOA\\" + dir_list + "\\trunk\\SOA\\" + dir_list + "")
         newlist.append(dir_list)
     except:
+        noSOAList.append(dir_list)
         print('No SOA folder for '+dir_list)
 
 
@@ -179,8 +181,10 @@ dataframe = DataFrame({'Service Name':f_final_service, 'Dependent Service':f_fin
 #print(dataframe)
 #print(len(final_list_service))
 #print(final_list_service[1][1])
-dataframe.to_excel('test.xlsx', sheet_name='sheet1', index=False)
+dataframe.to_excel('SOA Services.xlsx', sheet_name='sheet1', index=False)
 
+dataframe2 = DataFrame({'List of No SOA folder services':noSOAList})
+dataframe2.to_excel('No SOA Service.xlsx', sheet_name='sheet1', index=False)
 
 
 

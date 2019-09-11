@@ -1,9 +1,10 @@
-import xlrd, datetime, sys
-
+#Importing the Libraries
+import xlrd, datetime, sys, os
 from datetime import timedelta
-file_loc=input('Enter the Tracker location: ')
+from pandas import DataFrame
 
-loc = (file_loc+'\Deployment Tracker.xls')
+#Local Variables declaration
+
 startdatelist = []
 distsysCsid, distuatCsid, distoatCsid, distliveCsid, setDate = set(), set(), set(), set(), set()
 listsysCsid, listDate, listDate2 = [], [], []
@@ -18,16 +19,32 @@ pendSyscsid, pendUatcsid, pendOatcsid, pendLivecsid = set(), set(), set(), set()
 pendSyscomponent, pendUatcomponent, pendOatcomponent, pendLivecomponent = [], [], [], []
 SQLPLSQlCount, D2KCount, UnixCount, XMLCount, ADFCount, APPSCount, PortalCount, DiscovererCount, SOACount, SDFCount, MuleCount, OthersCount = [],[],[],[],[],[],[],[],[],[],[],[]
 
+#Input the values
 
+file_loc=input('Enter the Tracker location: ')
+loc = (file_loc+'\Deployment Tracker.xls')
+reportName =str(input('Is it MSR or WSR? :'))
 lastrow = int(input('Enter the last row number for the excel : '))
-
 st1 = str(input("Enter the start date in format dd/mm/yy: "))
 start_date=datetime.datetime.strptime(st1, '%d/%m/%y')
-for i in range(0, 31):
-    modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
-    startdatelist.append(modified_date)
-    start_date = start_date + timedelta(days=1)
-    #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
+if reportName.lower() == 'msr':
+    for i in range(0, 31):
+        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
+        startdatelist.append(modified_date)
+        start_date = start_date + timedelta(days=1)
+        #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
+elif reportName.lower()== 'wsr':
+    for i in range(0, 5):
+        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
+        startdatelist.append(modified_date)
+        start_date = start_date + timedelta(days=1)
+        #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
+else:
+    print('You entered a wrong report name')
+    exit()
+
+
+
 
 book = xlrd.open_workbook(loc)
 sheet = book.sheet_by_index(0)
@@ -182,6 +199,11 @@ for date in sorted(startdatelist):
     oatcsid.clear()
     livecsid.clear()
 
+finalsyscountcsidList, finaluatcountcsidList, finaloatcountcsidList, finallivecountcsidList=[],[],[],[]
+finalsyscountcsidList.append(finalsyscountcsid)
+finaluatcountcsidList.append(finaluatcountcsid)
+finaloatcountcsidList.append(finaloatcountcsid)
+finallivecountcsidList.append(finallivecountcsid)
 # print(len(livecsid),len(syscsid),len(uatcsid),len(oatcsid))
 # print(syscsid)
 print("Deployed Components", end='\n\n')
@@ -218,5 +240,11 @@ print('Others Count is          :',len(OthersCount))
 print('Total count is           :', (len(SQLPLSQlCount)+len(D2KCount)+len(UnixCount)+len(XMLCount)+len(ADFCount)+len(APPSCount)+
                                      len(PortalCount)+len(DiscovererCount)+len(SOACount)+len(SDFCount)+len(MuleCount)+len(OthersCount)))
 
-
+os.chdir("C:\\Temp\\report\\")
+dataframe = DataFrame({'SYS':[finalsyscountcsidList,len(syscomponent)], 'UAT':[finaluatcountcsidList,len(uatcomponent)],'OAT':[finaloatcountcsidList,len(oatcomponent)], 'LIVE':[finallivecountcsidList,len(livecomponent)]})
+#dataframe = DataFrame([final_list_service])
+#print(dataframe)
+#print(len(final_list_service))
+#print(final_list_service[1][1])
+dataframe.to_excel('test.xlsx', sheet_name='sheet1', index=False)
 
