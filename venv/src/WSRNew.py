@@ -206,6 +206,11 @@ finaloatcountcsidList.append(finaloatcountcsid)
 finallivecountcsidList.append(finallivecountcsid)
 # print(len(livecsid),len(syscsid),len(uatcsid),len(oatcsid))
 # print(syscsid)
+
+os.chdir("C:\\Temp\\report\\") #Changing the current directory
+
+sys.stdout=open("test.txt","w") #Creating a file to store the output data
+
 print("Deployed Components", end='\n\n')
 print("SYS "'\t\t'"UAT"'\t\t'"OAT"'\t\t'"LIVE")
 print(finalsyscountcsid, '\t\t', finaluatcountcsid, '\t\t', finaloatcountcsid, '\t\t', finallivecountcsid)
@@ -240,11 +245,12 @@ print('Others Count is          :',len(OthersCount))
 print('Total count is           :', (len(SQLPLSQlCount)+len(D2KCount)+len(UnixCount)+len(XMLCount)+len(ADFCount)+len(APPSCount)+
                                      len(PortalCount)+len(DiscovererCount)+len(SOACount)+len(SDFCount)+len(MuleCount)+len(OthersCount)))
 
-os.chdir("C:\\Temp\\report\\")
-dataframe = DataFrame({'SYS':[finalsyscountcsidList,len(syscomponent)], 'UAT':[finaluatcountcsidList,len(uatcomponent)],'OAT':[finaloatcountcsidList,len(oatcomponent)], 'LIVE':[finallivecountcsidList,len(livecomponent)]})
+
+#dataframe = DataFrame({'SYS':[finalsyscountcsidList,len(syscomponent)], 'UAT':[finaluatcountcsidList,len(uatcomponent)],'OAT':[finaloatcountcsidList,len(oatcomponent)], 'LIVE':[finallivecountcsidList,len(livecomponent)]})
 #dataframe = DataFrame([final_list_service])
 #print(dataframe)
 #print(len(final_list_service))
 #print(final_list_service[1][1])
-dataframe.to_excel('test.xlsx', sheet_name='sheet1', index=False)
+#dataframe.to_excel('test.xlsx', sheet_name='sheet1', index=False)
 
+sys.stdout.close()
