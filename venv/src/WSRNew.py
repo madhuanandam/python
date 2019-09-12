@@ -23,22 +23,28 @@ SQLPLSQlCount, D2KCount, UnixCount, XMLCount, ADFCount, APPSCount, PortalCount, 
 
 file_loc=input('Enter the Tracker location: ')
 loc = (file_loc+'\Deployment Tracker.xls')
-reportName =str(input('Is it MSR or WSR? :'))
+reportName =str(input('''Press 1 for MSR; 2 for WSR; 3 for DSR: ''' ))
 lastrow = int(input('Enter the last row number for the excel : '))
 st1 = str(input("Enter the start date in format dd/mm/yy: "))
 start_date=datetime.datetime.strptime(st1, '%d/%m/%y')
-if reportName.lower() == 'msr':
+
+if reportName == '1':
     for i in range(0, 31):
         modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
         startdatelist.append(modified_date)
         start_date = start_date + timedelta(days=1)
         #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
-elif reportName.lower()== 'wsr':
+elif reportName== '2':
     for i in range(0, 5):
         modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
         startdatelist.append(modified_date)
         start_date = start_date + timedelta(days=1)
         #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
+elif reportName== '3':
+    for i in range(0, 1):
+        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
+        startdatelist.append(modified_date)
+        start_date = start_date + timedelta(days=1)
 else:
     print('You entered a wrong report name')
     exit()
@@ -56,84 +62,112 @@ for date in sorted(startdatelist):
         try:
             # print(datecell)
             datecell_as_datetime = datetime.datetime(*xlrd.xldate_as_tuple(datecell, book.datemode))
-            # print(str(datecell_as_datetime))
+            #print((sheet.cell_value(rowx, 2)))
             # print(datetime.date(startdate))
 
             if (str(date) == str(datecell_as_datetime.strftime('%d/%m/%y'))):
-                # print('datetime: %s' % datecell_as_datetime.strftime('%d/%m/%y'))
+                #print(str('datetime: %s' % datecell_as_datetime.strftime('%d/%m/%y')))
+                #print(str(date))
                 # print(sheet.cell_value(rowx, colx=3))
                 if 'Deployed in SYS' in sheet.cell_value(rowx, 4):
-                    syscsid.add(sheet.cell_value(rowx, 2))
+                    #print(type(sheet.cell_value(rowx, 2)))
+                    #print(sheet.cell_value(rowx, 2))
+
+                    #print(csid)
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        syscsid.add(csidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
-                    # print('SYS is ', (syscsid))
+                    #print('SYS is ', (syscsid))
 
                 elif 'Deployed in UAT' in sheet.cell_value(rowx, 4):
-                    uatcsid.add(sheet.cell_value(rowx, 2))
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       uatcsid.add(csidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
                     # print('UAT is ', uatcsid)
 
                 elif 'Deployed in OAT' in sheet.cell_value(rowx, 4):
-                    oatcsid.add(sheet.cell_value(rowx, 2))
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       oatcsid.add(csidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
                     # print('OAT is ', oatcsid)
 
                 elif 'Deployed in LIVE' in sheet.cell_value(rowx, 4):
-                    livecsid.add(sheet.cell_value(rowx, 2))
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       livecsid.add(csidSplit)
                     livecomponent.append(sheet.cell_value(rowx, 3))
-                    # print('Live is ', livecsid)
+                    #print('Live is ', livecsid)
 
                 elif sheet.cell_value(rowx, 4) in ['Deployed in SYS, OAT' , 'Deployed in SYS,OAT'] :
-                    syscsid.add(sheet.cell_value(rowx, 2))
+
+                    for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
-                    oatcsid.add(sheet.cell_value(rowx, 2))
+                    for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       oatcsid.add(syscsidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
                     # print('Live is ', livecsid)
 
 
                 elif sheet.cell_value(rowx, 4) in ['Deployed in SYS, UAT' ,'Deployed in SYS,UAT']:
-                    syscsid.add(sheet.cell_value(rowx, 2))
+                    for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
-                    uatcsid.add(sheet.cell_value(rowx, 2))
+
+                    for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       uatcsid.add(uatcsidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
                      # print('Live is ', livecsid)
 
 
 
                 elif sheet.cell_value(rowx, 4) in ['Deployed in UAT, OAT', 'Deployed in UAT,OAT']:
-                    uatcsid.add(sheet.cell_value(rowx, 2))
+                    for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       uatcsid.add(uatcsidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
-                    oatcsid.add(sheet.cell_value(rowx, 2))
+
+                    for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       oatcsid.add(syscsidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
                      # print('Live is ', livecsid)
 
 
                 elif sheet.cell_value(rowx, 4) in ['Deployed in SYS,UAT,OAT', 'Deployed in SYS, UAT, OAT']:
-                    syscsid.add(sheet.cell_value(rowx, 2))
+
+                    for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
-                    uatcsid.add(sheet.cell_value(rowx, 2))
+
+                    for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       uatcsid.add(uatcsidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
-                    oatcsid.add(sheet.cell_value(rowx, 2))
+
+                    for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       oatcsid.add(syscsidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
                      # print('Live is ', livecsid)
 
 
                 elif sheet.cell_value(rowx, 4) in ['Pending in SYS', 'Error in SYS']:
-                    pendSyscsid.add(sheet.cell_value(rowx, 2))
+                    for pendingsyscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       pendSyscsid.add(pendingsyscsidSplit)
                     pendSyscomponent.append(sheet.cell_value(rowx, 3))
                     # print('SYS is ', syscsid)
 
                 elif sheet.cell_value(rowx, 4) in ['Pending in UAT', 'Error in UAT']:
-                    pendUatcsid.add(sheet.cell_value(rowx, 2))
+                    for pendinguatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       pendUatcsid.add(pendinguatcsidSplit)
                     pendUatcomponent.append(sheet.cell_value(rowx, 3))
                     # print('UAT is ', uatcsid)
 
                 elif sheet.cell_value(rowx, 4) in ['Pending in OAT', 'Error in OAT']:
-                    pendOatcsid.add(sheet.cell_value(rowx, 2))
+                    for pendingoatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       pendOatcsidatcsid.add(pendingoatcsidSplit)
                     pendOatcomponent.append(sheet.cell_value(rowx, 3))
-                    print('OAT is ', oatcsid)
+                    #print('OAT is ', oatcsid)
 
                 elif sheet.cell_value(rowx, 4) in ['Pending in LIVE', 'Error in LIVE']:
-                    pendLivecsid.add(sheet.cell_value(rowx, 2))
+                    for pendinglivecsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                       pendLivecsid.add(pendinglivecsidSplit)
                     pendLivecomponent.append(sheet.cell_value(rowx, 3))
 
             if (str(date) == str(datecell_as_datetime.strftime('%d/%m/%y'))):
