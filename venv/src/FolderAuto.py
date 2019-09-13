@@ -2,7 +2,7 @@ import os, glob
 import xml.dom.minidom
 
 from numpy import save
-from pandas import DataFrame, ExcelWriter
+from pandas import DataFrame
 from openpyxl import load_workbook
 
 
