@@ -8,8 +8,7 @@ from openpyxl import load_workbook
 
 def searchFile(serviceName, file_name):
 
-    list = os.chdir(path + "\\" +  + serviceName + "\\trunk\\SOA\\" + serviceName + "")
-    print(list)
+    list = os.chdir(path + "\\" +   serviceName + "\\trunk\\SOA\\" + serviceName + "")
     list_config, list_datasource, list_wsdl, list_service = [], [], [], []
 
     for file in glob.glob(file_name):
@@ -101,18 +100,18 @@ def searchFile(serviceName, file_name):
     return list_config, list_datasource, list_wsdl, list_service
 
 path=str(input('Enter the path of the checkedout directory: '))
-print(path)
+#print(path)
 newpath=os.chdir(path)
 list=os.listdir(newpath)
-print(list)
+#print(list)
 newlist=[]
 noSOAList=[]
 for dir_list in list:
-    print(dir_list)
+    #print(dir_list)
     try:
-        print(path + "\\" + dir_list + "\\trunk\\SOA\\" + dir_list + "")
+        #print(path + "\\" + dir_list + "\\trunk\\SOA\\" + dir_list + "")
         newdir = os.chdir(path + "\\" + dir_list + "\\trunk\\SOA\\" + dir_list + "")
-        print(newdir)
+        #print(newdir)
         newlist.append(dir_list)
     except:
         noSOAList.append(dir_list)
@@ -123,8 +122,6 @@ final_list_config, final_list_datasource, final_list_wsdl, final_list_service, f
 
 for dir_list in newlist:
     list_config, list_datasource, list_wsdl, list_service = searchFile(dir_list, file_name)
-
-
     final_list_config.append(list_config)
     final_list_datasource.append(list_datasource)
     final_list_wsdl.append(list_wsdl)
