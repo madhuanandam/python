@@ -23,7 +23,7 @@ SQLPLSQlCount, D2KCount, UnixCount, XMLCount, ADFCount, APPSCount, PortalCount, 
 
 file_loc=input('Enter the Tracker location: ')
 loc = (file_loc+'\Deployment Tracker.xls')
-reportName =str(input('''Press 1 for MSR; 2 for WSR; 3 for DSR: ''' ))
+reportName =str(input('Press 1 for MSR; 2 for WSR; 3 for DSR: ' ))
 lastrow = int(input('Enter the last row number for the excel : '))
 st1 = str(input("Enter the start date in format dd/mm/yy: "))
 start_date=datetime.datetime.strptime(st1, '%d/%m/%y')
@@ -57,7 +57,7 @@ sheet = book.sheet_by_index(0)
 #print(sorted(startdatelist))
 
 for date in sorted(startdatelist):
-    for rowx in range(0, lastrow):
+    for rowx in range(0,lastrow ):
         datecell = sheet.cell_value(rowx, colx=0)
         try:
             # print(datecell)
