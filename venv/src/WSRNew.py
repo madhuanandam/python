@@ -78,7 +78,7 @@ for date in sorted(startdatelist):
                        livecsid.add(csidSplit)
                     livecomponent.append(sheet.cell_value(rowx, 3))
 
-                elif sheet.cell_value(rowx, 4) in ['Deployed in SYS, OAT' , 'Deployed in SYS,OAT'] :
+                elif 'SYS' and 'OAT' in sheet.cell_value(rowx, 4)  :
 
                     for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        syscsid.add(syscsidSplit)
@@ -87,7 +87,7 @@ for date in sorted(startdatelist):
                        oatcsid.add(syscsidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif sheet.cell_value(rowx, 4) in ['Deployed in SYS, UAT' ,'Deployed in SYS,UAT']:
+                elif 'SYS' and 'UAT' in sheet.cell_value(rowx, 4) :
                     for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
@@ -96,7 +96,7 @@ for date in sorted(startdatelist):
                        uatcsid.add(uatcsidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif sheet.cell_value(rowx, 4) in ['Deployed in UAT, OAT', 'Deployed in UAT,OAT']:
+                elif 'UAT' and 'OAT' in sheet.cell_value(rowx, 4):
                     for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        uatcsid.add(uatcsidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
@@ -105,7 +105,7 @@ for date in sorted(startdatelist):
                        oatcsid.add(syscsidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif sheet.cell_value(rowx, 4) in ['Deployed in SYS,UAT,OAT', 'Deployed in SYS, UAT, OAT']:
+                elif 'SYS' and 'UAT' and 'OAT' in sheet.cell_value(rowx, 4) :
                     for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
