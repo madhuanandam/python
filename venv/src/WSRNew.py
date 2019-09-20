@@ -19,13 +19,24 @@ SQLPLSQlCount, D2KCount, UnixCount, XMLCount, ADFCount, APPSCount, PortalCount, 
 
 #Inputing the values
 
-file_loc=input('Enter the Tracker location: ')
-loc = (file_loc+'\Deployment Tracker.xls')
-reportName =str(input('Press 1 for MSR; 2 for WSR; 3 for DSR: ' ))
-lastrow = int(input('Enter the last row number for the excel : '))
-st1 = str(input("Enter the start date in format dd/mm/yy: "))
-start_date=datetime.datetime.strptime(st1, '%d/%m/%y')
+#file_loc=input('Enter the Tracker location: ')
+loc = ('T:\Configuration and Release Management\Deployment Trackers\From Jan-2019\Deployment Tracker.xls')
+#reportName =str(input('Press 1 for MSR; 2 for WSR; 3 for DSR: ' ))
+book = xlrd.open_workbook(loc)
+sheet = book.sheet_by_index(0)
+lastrow = sheet.nrows
+#st1 = str(input("Enter the start date in format dd/mm/yy: "))
+date=(datetime.datetime.now()-timedelta(days=7)).strftime('%d/%m/%y')
+start_date = datetime.datetime.strptime(date, '%d/%m/%y')
+#print(start_date)
+for i in range(0, 5):
+        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
+        startdatelist.append(modified_date)
+        start_date = start_date + timedelta(days=1)
+        #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
 
+
+'''
 if reportName == '1':
     for i in range(0, 31):
         modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
@@ -47,8 +58,16 @@ else:
     print('You entered a wrong report name')
     exit()
 
-book = xlrd.open_workbook(loc)
-sheet = book.sheet_by_index(0)
+'''
+
+
+
+
+sysuat=['SYS', 'UAT']
+uatoat=['UAT', 'OAT']
+sysoat=['SYS', 'OAT']
+sysuatoat=['SYS','UAT', 'OAT']
+
 
 for date in sorted(startdatelist):
     for rowx in range(0,lastrow ):
@@ -58,28 +77,27 @@ for date in sorted(startdatelist):
 
             if (str(date) == str(datecell_as_datetime.strftime('%d/%m/%y'))):
 
-                if 'Deployed in SYS' in sheet.cell_value(rowx, 4):
+                if 'Deployed in SYS' == sheet.cell_value(rowx, 4):
                     for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                         syscsid.add(csidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
 
-                elif 'Deployed in UAT' in sheet.cell_value(rowx, 4):
+                elif 'Deployed in UAT' == sheet.cell_value(rowx, 4):
                     for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        uatcsid.add(csidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif 'Deployed in OAT' in sheet.cell_value(rowx, 4):
+                elif 'Deployed in OAT' == sheet.cell_value(rowx, 4):
                     for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        oatcsid.add(csidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif 'Deployed in LIVE' in sheet.cell_value(rowx, 4):
+                elif 'Deployed in LIVE' == sheet.cell_value(rowx, 4):
                     for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        livecsid.add(csidSplit)
                     livecomponent.append(sheet.cell_value(rowx, 3))
 
-                elif 'SYS' and 'OAT' in sheet.cell_value(rowx, 4)  :
-
+                elif all(x in sheet.cell_value(rowx, 4) for x in sysoat) :
                     for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
@@ -87,7 +105,7 @@ for date in sorted(startdatelist):
                        oatcsid.add(syscsidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif 'SYS' and 'UAT' in sheet.cell_value(rowx, 4) :
+                elif all(x in sheet.cell_value(rowx, 4) for x in sysuat) :
                     for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
@@ -96,7 +114,7 @@ for date in sorted(startdatelist):
                        uatcsid.add(uatcsidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif 'UAT' and 'OAT' in sheet.cell_value(rowx, 4):
+                elif all(x in sheet.cell_value(rowx, 4) for x in uatoat) :
                     for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        uatcsid.add(uatcsidSplit)
                     uatcomponent.append(sheet.cell_value(rowx, 3))
@@ -105,7 +123,7 @@ for date in sorted(startdatelist):
                        oatcsid.add(syscsidSplit)
                     oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                elif 'SYS' and 'UAT' and 'OAT' in sheet.cell_value(rowx, 4) :
+                elif all(x in sheet.cell_value(rowx, 4) for x in sysuatoat):
                     for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                        syscsid.add(syscsidSplit)
                     syscomponent.append(sheet.cell_value(rowx, 3))
@@ -200,10 +218,10 @@ finaluatcountcsidList.append(finaluatcountcsid)
 finaloatcountcsidList.append(finaloatcountcsid)
 finallivecountcsidList.append(finallivecountcsid)
 
-os.chdir("C:\\Temp\\report\\") #Changing the current directory
-sys.stdout=open("test.txt","w") #Creating a file to store the output data
+os.chdir("C:\\Temp\\report_generation\\") #Changing the current directory
+sys.stdout=open("Deployment_Tracker_Report.txt","w") #Creating a file to store the output data
 
-print("Deployed Components", end='\n\n')
+print("Deployed Changes as CSID and Component wise", end='\n\n')
 print("SYS "'\t\t'"UAT"'\t\t'"OAT"'\t\t'"LIVE")
 print(finalsyscountcsid, '\t\t', finaluatcountcsid, '\t\t', finaloatcountcsid, '\t\t', finallivecountcsid)
 print(len(syscomponent), '\t\t', len(uatcomponent), '\t\t', len(oatcomponent), '\t\t', len(livecomponent))
