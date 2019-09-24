@@ -11,16 +11,19 @@ listsysCsid, listDate, listDate2 = [], [], []
 setsysCsid, setuatCsid, setoatCsid, setliveCsid = set(), set(), set(), set()
 sysCount, uatCount, oatCount, liveCount = 0, 0, 0, 0
 finalsyscountcsid, finaluatcountcsid, finaloatcountcsid, finallivecountcsid = 0, 0, 0, 0
+finalsysOutcountcsid, finaluatOutcountcsid, finaloatOutcountcsid, finalliveOutcountcsid = 0, 0, 0, 0
 livecsid, syscsid, uatcsid, oatcsid = set(), set(), set(), set()
 syscomponent, uatcomponent, oatcomponent, livecomponent = [], [], [], []
 pendSyscsid, pendUatcsid, pendOatcsid, pendLivecsid = set(), set(), set(), set()
 pendSyscomponent, pendUatcomponent, pendOatcomponent, pendLivecomponent = [], [], [], []
 SQLPLSQlCount, D2KCount, UnixCount, XMLCount, ADFCount, APPSCount, PortalCount, DiscovererCount, SOACount, SDFCount, MuleCount, OthersCount = [],[],[],[],[],[],[],[],[],[],[],[]
 
+sysOutCsid, uatOutCsid, oatOutCsid, liveOutCsid = set(), set(), set(), set()
+
 #Inputing the values
 
 #file_loc=input('Enter the Tracker location: ')
-loc = ('T:\Configuration and Release Management\Deployment Trackers\From Jan-2019\Deployment Tracker.xls')
+loc = ('C:\Temp\Copy Deployment Tracker.xls')
 #reportName =str(input('Press 1 for MSR; 2 for WSR; 3 for DSR: ' ))
 book = xlrd.open_workbook(loc)
 sheet = book.sheet_by_index(0)
@@ -29,7 +32,7 @@ lastrow = sheet.nrows
 date=(datetime.datetime.now()-timedelta(days=1)).strftime('%d/%m/%y')
 start_date = datetime.datetime.strptime(date, '%d/%m/%y')
 #print(start_date)
-for i in range(0, 5):
+for i in range(0, 2):
         modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
         startdatelist.append(modified_date)
         start_date = start_date + timedelta(days=1)
@@ -81,60 +84,73 @@ for date in sorted(startdatelist):
                     if 'Deployed in SYS' == sheet.cell_value(rowx, 4):
                         for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                             syscsid.add(csidSplit)
+                            sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         syscomponent.append(sheet.cell_value(rowx, 3))
 
                     elif 'Deployed in UAT' == sheet.cell_value(rowx, 4):
                         for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            uatcsid.add(csidSplit)
+                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         uatcomponent.append(sheet.cell_value(rowx, 3))
 
                     elif 'Deployed in OAT' == sheet.cell_value(rowx, 4):
                         for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            oatcsid.add(csidSplit)
+                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         oatcomponent.append(sheet.cell_value(rowx, 3))
 
                     elif 'Deployed in LIVE' == sheet.cell_value(rowx, 4):
                         for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            livecsid.add(csidSplit)
+                           liveOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         livecomponent.append(sheet.cell_value(rowx, 3))
 
                     elif all(x in sheet.cell_value(rowx, 4) for x in sysoat) :
                         for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            syscsid.add(syscsidSplit)
+                           sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         syscomponent.append(sheet.cell_value(rowx, 3))
                         for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            oatcsid.add(syscsidSplit)
+                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         oatcomponent.append(sheet.cell_value(rowx, 3))
 
                     elif all(x in sheet.cell_value(rowx, 4) for x in sysuat) :
                         for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            syscsid.add(syscsidSplit)
+                           sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         syscomponent.append(sheet.cell_value(rowx, 3))
 
                         for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            uatcsid.add(uatcsidSplit)
+                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         uatcomponent.append(sheet.cell_value(rowx, 3))
 
                     elif all(x in sheet.cell_value(rowx, 4) for x in uatoat) :
                         for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            uatcsid.add(uatcsidSplit)
+                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         uatcomponent.append(sheet.cell_value(rowx, 3))
 
                         for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            oatcsid.add(syscsidSplit)
+                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         oatcomponent.append(sheet.cell_value(rowx, 3))
 
                     elif all(x in sheet.cell_value(rowx, 4) for x in sysuatoat):
                         for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            syscsid.add(syscsidSplit)
+                           sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         syscomponent.append(sheet.cell_value(rowx, 3))
 
                         for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            uatcsid.add(uatcsidSplit)
+                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         uatcomponent.append(sheet.cell_value(rowx, 3))
 
                         for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
                            oatcsid.add(syscsidSplit)
+                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
                         oatcomponent.append(sheet.cell_value(rowx, 3))
 
                     elif sheet.cell_value(rowx, 4) in ['Pending in SYS', 'Error in SYS']:
@@ -203,16 +219,33 @@ for date in sorted(startdatelist):
         # startdate = startdate + datetime.timedelta(days=1)
         except:
             print('', end='')
+
     window=window-1
+    print(sysOutCsid)
+    print(uatOutCsid)
+    print(oatOutCsid)
+    print(liveOutCsid)
+
     finalsyscountcsid = finalsyscountcsid + len(syscsid)
     finaluatcountcsid = finaluatcountcsid + len(uatcsid)
     finaloatcountcsid = finaloatcountcsid + len(oatcsid)
     finallivecountcsid = finallivecountcsid + len(livecsid)
 
+    finalsysOutcountcsid = finalsysOutcountcsid + len(sysOutCsid)
+    finaluatOutcountcsid = finaluatOutcountcsid + len(uatOutCsid)
+    finaloatOutcountcsid = finaloatOutcountcsid + len(oatOutCsid)
+    finalliveOutcountcsid = finalliveOutcountcsid + len(liveOutCsid)
+
     syscsid.clear()
     uatcsid.clear()
     oatcsid.clear()
     livecsid.clear()
+
+    sysOutCsid.clear()
+    uatOutCsid.clear()
+    oatOutCsid.clear()
+    liveOutCsid.clear()
+    print(finalsysOutcountcsid)
 
 finalsyscountcsidList, finaluatcountcsidList, finaloatcountcsidList, finallivecountcsidList=[],[],[],[]
 finalsyscountcsidList.append(finalsyscountcsid)
@@ -221,19 +254,25 @@ finaloatcountcsidList.append(finaloatcountcsid)
 finallivecountcsidList.append(finallivecountcsid)
 
 os.chdir("T:\\Configuration and Release Management\\Status Reports\\DSR\\Component_Reports") #Changing the current directory
-sys.stdout=open("Deployment_Tracker_Report"+datetime.datetime.now()+".txt","w") #Creating a file to store the output data
+sys.stdout=open("Deployment_Tracker_Report.txt","w") #Creating a file to store the output data
 
 print("Deployed Changes as CSID and Component wise", end='\n\n')
 print("SYS "'\t\t'"UAT"'\t\t'"OAT"'\t\t'"LIVE")
 print(finalsyscountcsid, '\t\t', finaluatcountcsid, '\t\t', finaloatcountcsid, '\t\t', finallivecountcsid)
 print(len(syscomponent), '\t\t', len(uatcomponent), '\t\t', len(oatcomponent), '\t\t', len(livecomponent))
-
+print("", end='\n\n')
 print("--------------------------------------------------------")
 print("Pending Components", end='\n\n')
 print("SYS "'\t\t'"UAT"'\t\t'"OAT"'\t\t'"LIVE")
 print(len(pendSyscomponent), '\t\t', len(pendUatcomponent), '\t\t', len(pendOatcomponent), '\t\t',
       len(pendLivecomponent))
 
+print("", end='\n\n')
+print("--------------------------------------------------------")
+print("out of window deployment CSID count", end='\n\n')
+print("SYS "'\t\t'"UAT"'\t\t'"OAT"'\t\t'"LIVE")
+print(finalsysOutcountcsid, '\t\t', finaloatOutcountcsid, '\t\t', finaloatOutcountcsid, '\t\t', finalliveOutcountcsid)
+print("", end='\n\n')
 print("--------------------------------------------------------")
 print("Technology Components deployed in LIVE", end='\n\n')
 print('SQL/PLSQL Count is       :',len(SQLPLSQlCount))
