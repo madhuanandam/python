@@ -72,7 +72,7 @@ sysoat=['SYS', 'OAT']
 sysuatoat=['SYS','UAT', 'OAT']
 
 
-print(startdatelist)
+#print(startdatelist)
 for date in sorted(startdatelist):
     for rowx in range(0,lastrow ):
         datecell = sheet.cell_value(rowx, colx=0)
