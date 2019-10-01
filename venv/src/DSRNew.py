@@ -229,7 +229,7 @@ for date in sorted(startdatelist, key=lambda x: datetime.datetime.strptime(x, '%
     #print(uatOutCsid)
     #print(oatOutCsid)
     #print(liveOutCsid)
-    print(syscsid)
+    #print(syscsid)
     #print(syscomponent)
     finalsyscountcsid = finalsyscountcsid + len(syscsid)
     finaluatcountcsid = finaluatcountcsid + len(uatcsid)
