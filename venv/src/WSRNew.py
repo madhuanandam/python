@@ -23,155 +23,127 @@ sysOutCsid, uatOutCsid, oatOutCsid, liveOutCsid = set(), set(), set(), set()
 #Inputing the values
 
 #file_loc=input('Enter the Tracker location: ')
-loc = ('C:\Temp\Copy Deployment Tracker.xls')
+loc = ('T:\Configuration and Release Management\Deployment Trackers\From Jan-2019\Deployment Tracker.xls')
 #reportName =str(input('Press 1 for MSR; 2 for WSR; 3 for DSR: ' ))
 book = xlrd.open_workbook(loc)
 sheet = book.sheet_by_index(0)
 lastrow = sheet.nrows
 #st1 = str(input("Enter the start date in format dd/mm/yy: "))
-date=(datetime.datetime.now()-timedelta(days=1)).strftime('%d/%m/%y')
+date=(datetime.datetime.now()-timedelta(days=7)).strftime('%d/%m/%y')
 start_date = datetime.datetime.strptime(date, '%d/%m/%y')
 #print(start_date)
-for i in range(0, 5):
+for i in range(0, 7):
         modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
         startdatelist.append(modified_date)
         start_date = start_date + timedelta(days=1)
         #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
-
-
-'''
-if reportName == '1':
-    for i in range(0, 31):
-        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
-        startdatelist.append(modified_date)
-        start_date = start_date + timedelta(days=1)
-        #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
-elif reportName== '2':
-    for i in range(0, 5):
-        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
-        startdatelist.append(modified_date)
-        start_date = start_date + timedelta(days=1)
-        #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
-elif reportName== '3':
-    for i in range(0, 1):
-        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
-        startdatelist.append(modified_date)
-        start_date = start_date + timedelta(days=1)
-else:
-    print('You entered a wrong report name')
-    exit()
-
-'''
-
-
-
 
 sysuat=['SYS', 'UAT']
 uatoat=['UAT', 'OAT']
 sysoat=['SYS', 'OAT']
 sysuatoat=['SYS','UAT', 'OAT']
 
-window=2
 
-for date in sorted(startdatelist):
+#print(startdatelist)
+for date in sorted(startdatelist, key=lambda x: datetime.datetime.strptime(x, '%d/%m/%y')):
     for rowx in range(0,lastrow ):
         datecell = sheet.cell_value(rowx, colx=0)
         try:
             datecell_as_datetime = datetime.datetime(*xlrd.xldate_as_tuple(datecell, book.datemode))
             if (str(date) == str(datecell_as_datetime.strftime('%d/%m/%y'))):
                 #print(sheet.cell_value(rowx, 9))
-                if(sheet.cell_value(rowx, 9)== window):
-                    if 'Deployed in SYS' == sheet.cell_value(rowx, 4):
-                        for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                            syscsid.add(csidSplit)
-                            sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        syscomponent.append(sheet.cell_value(rowx, 3))
+                if 'Deployed in SYS' == sheet.cell_value(rowx, 4):
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        syscsid.add(csidSplit)
+                        sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    syscomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif 'Deployed in UAT' == sheet.cell_value(rowx, 4):
-                        for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           uatcsid.add(csidSplit)
-                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        uatcomponent.append(sheet.cell_value(rowx, 3))
+                elif 'Deployed in UAT' == sheet.cell_value(rowx, 4):
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        uatcsid.add(csidSplit)
+                        uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    uatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif 'Deployed in OAT' == sheet.cell_value(rowx, 4):
-                        for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           oatcsid.add(csidSplit)
-                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        oatcomponent.append(sheet.cell_value(rowx, 3))
+                elif 'Deployed in OAT' == sheet.cell_value(rowx, 4):
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        oatcsid.add(csidSplit)
+                        oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif 'Deployed in LIVE' == sheet.cell_value(rowx, 4):
-                        for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           livecsid.add(csidSplit)
-                           liveOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        livecomponent.append(sheet.cell_value(rowx, 3))
+                elif 'Deployed in LIVE' == sheet.cell_value(rowx, 4):
+                    for csidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        livecsid.add(csidSplit)
+                        liveOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    livecomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif all(x in sheet.cell_value(rowx, 4) for x in sysoat) :
-                        for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           syscsid.add(syscsidSplit)
-                           sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        syscomponent.append(sheet.cell_value(rowx, 3))
-                        for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           oatcsid.add(syscsidSplit)
-                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        oatcomponent.append(sheet.cell_value(rowx, 3))
+                elif all(x in sheet.cell_value(rowx, 4) for x in sysoat):
+                    for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        syscsid.add(syscsidSplit)
+                        sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    syscomponent.append(sheet.cell_value(rowx, 3))
+                    for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        oatcsid.add(syscsidSplit)
+                        oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif all(x in sheet.cell_value(rowx, 4) for x in sysuat) :
-                        for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           syscsid.add(syscsidSplit)
-                           sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        syscomponent.append(sheet.cell_value(rowx, 3))
+                elif all(x in sheet.cell_value(rowx, 4) for x in sysuat):
+                    for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        syscsid.add(syscsidSplit)
+                        sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    syscomponent.append(sheet.cell_value(rowx, 3))
 
-                        for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           uatcsid.add(uatcsidSplit)
-                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        uatcomponent.append(sheet.cell_value(rowx, 3))
+                    for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        uatcsid.add(uatcsidSplit)
+                        uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    uatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif all(x in sheet.cell_value(rowx, 4) for x in uatoat) :
-                        for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           uatcsid.add(uatcsidSplit)
-                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        uatcomponent.append(sheet.cell_value(rowx, 3))
+                elif all(x in sheet.cell_value(rowx, 4) for x in uatoat):
+                    for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        uatcsid.add(uatcsidSplit)
+                        uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    uatcomponent.append(sheet.cell_value(rowx, 3))
 
-                        for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           oatcsid.add(syscsidSplit)
-                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        oatcomponent.append(sheet.cell_value(rowx, 3))
+                    for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        oatcsid.add(syscsidSplit)
+                        oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif all(x in sheet.cell_value(rowx, 4) for x in sysuatoat):
-                        for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           syscsid.add(syscsidSplit)
-                           sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        syscomponent.append(sheet.cell_value(rowx, 3))
+                elif all(x in sheet.cell_value(rowx, 4) for x in sysuatoat):
+                    for syscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        syscsid.add(syscsidSplit)
+                        sysOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    syscomponent.append(sheet.cell_value(rowx, 3))
 
-                        for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           uatcsid.add(uatcsidSplit)
-                           uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        uatcomponent.append(sheet.cell_value(rowx, 3))
+                    for uatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        uatcsid.add(uatcsidSplit)
+                        uatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    uatcomponent.append(sheet.cell_value(rowx, 3))
 
-                        for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           oatcsid.add(syscsidSplit)
-                           oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else nothing
-                        oatcomponent.append(sheet.cell_value(rowx, 3))
+                    for oatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        oatcsid.add(syscsidSplit)
+                        oatOutCsid.add(csidSplit) if 'OUT' == sheet.cell_value(rowx, 7) else print('',end='')
+                    oatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif sheet.cell_value(rowx, 4) in ['Pending in SYS', 'Error in SYS']:
-                        for pendingsyscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           pendSyscsid.add(pendingsyscsidSplit)
-                        pendSyscomponent.append(sheet.cell_value(rowx, 3))
+                elif sheet.cell_value(rowx, 4) in ['Pending in SYS', 'Error in SYS']:
+                    for pendingsyscsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        pendSyscsid.add(pendingsyscsidSplit)
+                    pendSyscomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif sheet.cell_value(rowx, 4) in ['Pending in UAT', 'Error in UAT']:
-                        for pendinguatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           pendUatcsid.add(pendinguatcsidSplit)
-                        pendUatcomponent.append(sheet.cell_value(rowx, 3))
+                elif sheet.cell_value(rowx, 4) in ['Pending in UAT', 'Error in UAT']:
+                    for pendinguatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        pendUatcsid.add(pendinguatcsidSplit)
+                    pendUatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif sheet.cell_value(rowx, 4) in ['Pending in OAT', 'Error in OAT']:
-                        for pendingoatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           pendOatcsidatcsid.add(pendingoatcsidSplit)
-                        pendOatcomponent.append(sheet.cell_value(rowx, 3))
+                elif sheet.cell_value(rowx, 4) in ['Pending in OAT', 'Error in OAT']:
+                    for pendingoatcsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        pendOatcsidatcsid.add(pendingoatcsidSplit)
+                    pendOatcomponent.append(sheet.cell_value(rowx, 3))
 
-                    elif sheet.cell_value(rowx, 4) in ['Pending in LIVE', 'Error in LIVE']:
-                        for pendinglivecsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
-                           pendLivecsid.add(pendinglivecsidSplit)
-                        pendLivecomponent.append(sheet.cell_value(rowx, 3))
+                elif sheet.cell_value(rowx, 4) in ['Pending in LIVE', 'Error in LIVE']:
+                    for pendinglivecsidSplit in str(sheet.cell_value(rowx, 2)).split('/'):
+                        pendLivecsid.add(pendinglivecsidSplit)
+                    pendLivecomponent.append(sheet.cell_value(rowx, 3))
+
 
             if (str(date) == str(datecell_as_datetime.strftime('%d/%m/%y'))):
 
@@ -220,11 +192,11 @@ for date in sorted(startdatelist):
         except:
             print('', end='')
 
-    window=window-1
-    print(sysOutCsid)
-    print(uatOutCsid)
-    print(oatOutCsid)
-    print(liveOutCsid)
+    #window=window-1
+    #print(sysOutCsid)
+    #print(uatOutCsid)
+    #print(oatOutCsid)
+    #print(liveOutCsid)
 
     finalsyscountcsid = finalsyscountcsid + len(syscsid)
     finaluatcountcsid = finaluatcountcsid + len(uatcsid)
@@ -245,7 +217,7 @@ for date in sorted(startdatelist):
     uatOutCsid.clear()
     oatOutCsid.clear()
     liveOutCsid.clear()
-    print(finalsysOutcountcsid)
+    #print(finalsysOutcountcsid)
 
 finalsyscountcsidList, finaluatcountcsidList, finaloatcountcsidList, finallivecountcsidList=[],[],[],[]
 finalsyscountcsidList.append(finalsyscountcsid)
@@ -253,8 +225,8 @@ finaluatcountcsidList.append(finaluatcountcsid)
 finaloatcountcsidList.append(finaloatcountcsid)
 finallivecountcsidList.append(finallivecountcsid)
 
-os.chdir("T:\\Configuration and Release Management\\Status Reports\\DSR\\Component_Reports") #Changing the current directory
-sys.stdout=open("Deployment_Tracker_Report.txt","w") #Creating a file to store the output data
+os.chdir("T:\\Configuration and Release Management\\Status Reports\\WSR\\Component_Reports") #Changing the current directory
+sys.stdout=open("WSR_Deployment_Tracker_Report_"+str((datetime.datetime.now()).strftime('%d-%m-%y'))+".txt","w") #Creating a file to store the output data
 
 print("Deployed Changes as CSID and Component wise", end='\n\n')
 print("SYS "'\t\t'"UAT"'\t\t'"OAT"'\t\t'"LIVE")
