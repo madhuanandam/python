@@ -30,14 +30,16 @@ sheet = book.sheet_by_index(0)
 lastrow = sheet.nrows
 #st1 = str(input("Enter the start date in format dd/mm/yy: "))
 day=datetime.datetime.today().weekday()
+#day=0
 #print(day)
 
-if day is 4:
+if day is 0:
     date = (datetime.datetime.now() - timedelta(days=3)).strftime('%d/%m/%y')
     start_date = datetime.datetime.strptime(date, '%d/%m/%y')
     for i in range(0, 4):
         modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
         startdatelist.append(modified_date)
+        #print((startdatelist).sort())
         start_date = start_date + timedelta(days=1)
 else:
     date=(datetime.datetime.now()-timedelta(days=1)).strftime('%d/%m/%y')
@@ -45,38 +47,24 @@ else:
     for i in range(0, 2):
         modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
         startdatelist.append(modified_date)
+        #print(startdatelist)
         start_date = start_date + timedelta(days=1)
-print(start_date)
+#print(start_date)
+
 
         #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
 
-
-'''
-if reportName == '1':
-    for i in range(0, 31):
-        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
-        startdatelist.append(modified_date)
-        start_date = start_date + timedelta(days=1)
-        #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
-elif reportName== '2':
-    for i in range(0, 5):
-        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
-        startdatelist.append(modified_date)
-        start_date = start_date + timedelta(days=1)
-        #print(datetime.datetime.strftime(modified_date, "%d/%m/%y"))
-elif reportName== '3':
-    for i in range(0, 1):
-        modified_date = datetime.datetime.strftime(start_date, "%d/%m/%y")
-        startdatelist.append(modified_date)
-        start_date = start_date + timedelta(days=1)
+#print(startdatelist[1])
+#print(startdatelist[2])
+#print(newstartdate)
+if len(startdatelist)==4:
+    #print()
+    newstartdate = sorted(startdatelist, key=lambda x: datetime.datetime.strptime(x, '%d/%m/%y'))
+    newstartdate.pop(1)
+    newstartdate.pop(1)
+    startdatelist=newstartdate
 else:
-    print('You entered a wrong report name')
-    exit()
-
-'''
-
-
-
+    print()
 
 sysuat=['SYS', 'UAT']
 uatoat=['UAT', 'OAT']
@@ -84,8 +72,8 @@ sysoat=['SYS', 'OAT']
 sysuatoat=['SYS','UAT', 'OAT']
 
 window=2
-print(startdatelist)
-for date in sorted(startdatelist):
+#print(sorted(startdatelist, key=lambda x: datetime.datetime.strptime(x, '%d/%m/%y')))
+for date in sorted(startdatelist, key=lambda x: datetime.datetime.strptime(x, '%d/%m/%y')):
     for rowx in range(0,lastrow ):
         datecell = sheet.cell_value(rowx, colx=0)
         try:
@@ -241,7 +229,7 @@ for date in sorted(startdatelist):
     #print(uatOutCsid)
     #print(oatOutCsid)
     #print(liveOutCsid)
-    #print(syscsid)
+    print(syscsid)
     #print(syscomponent)
     finalsyscountcsid = finalsyscountcsid + len(syscsid)
     finaluatcountcsid = finaluatcountcsid + len(uatcsid)
